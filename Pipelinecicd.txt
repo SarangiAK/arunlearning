@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "3.9.0"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/SarangiAK/arunlearning.git'
+
+                // Run Maven on a Unix agent.
+               // sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+               bat "mvn -f curewellinvoicemanagement/ -DskipTests=true clean package"
+               
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                   // junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'curewellinvoicemanagement/target/*.war'
+                    fileOperations([fileCopyOperation(
+                    excludes: '',
+                    flattenFiles: false,
+                    includes: '**/*.war',
+                    targetLocation: "D:\\Arun-Util\\apache-tomcat-9.0.102-windows-x64\\apache-tomcat-9.0.10\\webapps")])
+
+                 
+                    echo 'Build successful!'
+                }
+                unstable {
+
+
+
+            // Notify on unstable build
+
+
+
+            echo 'Build unstable.'
+
+
+
+
+        }
+
+
+
+        failure {
+
+
+
+            // Notify on failure
+
+
+
+            echo 'Build failed!'
+
+
+
+
+        }
+            }
+        }
+    }
+
+}
