@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "3.9.0"
+             maven "3.9.0"
     }
 
     stages {
@@ -12,11 +11,8 @@ pipeline {
                 // Get some code from a GitHub repository
                 git 'https://github.com/SarangiAK/arunlearning.git'
 
-                // Run Maven on a Unix agent.
-               // sh "mvn -Dmaven.test.failure.ignore=true clean package"
-
-                // To run Maven on a Windows agent, use
-               bat "mvn -f curewellinvoicemanagement/ -DskipTests=true clean package"
+         
+                 bat "mvn -f curewellinvoicemanagement/ -DskipTests=true clean package"
                
             }
 
@@ -24,7 +20,7 @@ pipeline {
                 // If Maven was able to run the tests, even if some of the test
                 // failed, record the test results and archive the jar file.
                 success {
-                   // junit '**/target/surefire-reports/TEST-*.xml'
+              
                     archiveArtifacts 'curewellinvoicemanagement/target/*.war'
                     fileOperations([fileCopyOperation(
                     excludes: '',
@@ -39,8 +35,7 @@ pipeline {
 
 
 
-            // Notify on unstable build
-
+        
 
 
             echo 'Build unstable.'
